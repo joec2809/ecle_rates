@@ -160,13 +160,13 @@ cython_debug/
 #.idea/
 
 # Data
-.csv
-.txt
-.ascii
+*.csv
+*.txt
+*.ascii
+*.fits
 
 # Images
-.png
+*.png
 
 # Bash Scripts
-.sh
-
+*.sh
