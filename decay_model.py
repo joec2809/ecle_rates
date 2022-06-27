@@ -1,11 +1,17 @@
-import enum
+
 import sys
 import Hirogen_Functions
 
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from statistics import mean
+
+#################################################################
+
+# This code unpacks the EQWs of the ECLEs at the three observed times and calculates the mean width
+# It then used scipy.optimize.curve_fit to try and fit a power law to the data
+
+#################################################################
 
 NERSC_Flag = False # True - Running on NERSC, FALSE - Running locally
 Local_DESI = False
@@ -81,6 +87,8 @@ else:
 
 clean_Og_Fe_List = []
 
+# Remove nan values
+
 for i, line in enumerate(og_Fe_pEQW_List):
     clean_Og_Fe_List.append(line[0])
     if line[0] <= -999 and i not in invalid_lines:
@@ -91,6 +99,8 @@ clean_Og_Fe_Array = np.array(clean_Og_Fe_List)
 """for i, eqw in enumerate(clean_Og_Fe_Array):
     if eqw > 0:
         clean_Og_Fe_Array[i] = 0"""
+
+# Calculate average EQW of lines
 
 clean_Og_Fe_List.append(np.mean(clean_Og_Fe_Array[clean_Og_Fe_Array != -999]))
 #clean_Og_Fe_List.append(np.mean(clean_Og_Fe_Array[np.logical_and(clean_Og_Fe_Array != -999, clean_Og_Fe_Array < 0)]))
@@ -285,6 +295,8 @@ ax.set_ylim(0, -4)
 
 times = np.array([fin_Og_MJD[0], fin_Mid_MJD[0], fin_New_MJD[0]])
 EQWs = np.array([clean_Og_Fe_List[4], clean_Mid_Fe_List[4], clean_New_Fe_List[4]])
+
+# Try and fit power law to data
 
 par, cov = curve_fit(power_law, times, EQWs, maxfev = 10000, p0 = (1,1))
 
